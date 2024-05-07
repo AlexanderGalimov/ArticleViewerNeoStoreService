@@ -1,25 +1,16 @@
 package cs.vsu.ru.galimov.tasks.articleviewerneostoreservice.model;
 
-import lombok.Getter;
-import lombok.Setter;
-import lombok.ToString;
-
-import java.util.List;
+import lombok.Data;
 
 
-@Getter
-@Setter
-@ToString
+@Data
 public class PDFParams {
     private String link;
 
-    private List<String> authors;
-
     private String title;
 
-    public PDFParams(String link, List<String> authors, String title) {
+    public PDFParams(String link, String title) {
         this.link = link;
-        this.authors = authors;
         this.title = title;
     }
 

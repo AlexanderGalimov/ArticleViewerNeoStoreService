@@ -2,16 +2,13 @@ package cs.vsu.ru.galimov.tasks.articleviewerneostoreservice.model;
 
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
-import lombok.Getter;
-import lombok.Setter;
-import lombok.ToString;
+import lombok.Data;
 import org.springframework.data.annotation.Id;
-import org.springframework.data.mongodb.core.index.TextIndexed;
 import org.springframework.data.mongodb.core.mapping.Document;
 
-@Getter
-@Setter
-@ToString
+import java.util.List;
+
+@Data
 @Document(collection = "Articles")
 @JsonDeserialize
 @JsonSerialize
@@ -27,7 +24,8 @@ public class Article {
 
     private PDFParams pdfParams;
 
-    @TextIndexed
+    private List<String> authorIds;
+
     private String fullText;
 
     private String uniqUIIDS3;

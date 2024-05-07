@@ -1,41 +1,23 @@
 package cs.vsu.ru.galimov.tasks.articleviewerneostoreservice.model;
 
+import lombok.Data;
+import org.springframework.data.annotation.Id;
+import org.springframework.data.mongodb.core.index.Indexed;
+import org.springframework.data.mongodb.core.mapping.Document;
 
-import lombok.Getter;
-import lombok.Setter;
-import org.springframework.data.neo4j.core.schema.*;
-
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
-
-@Getter
-@Setter
-@Node("Author")
+@Data
+@Document(collection = "Authors")
 public class Author {
     @Id
-    @GeneratedValue
-    private Long id;
+    private String id;
 
-    @Property
+    @Indexed(unique = true)
     private String name;
 
-    @Relationship(type = "RELATED_TO")
-    private Set<Author> relatedAuthors;
-
-    public Author(String name, Set<Author> relatedAuthors) {
+    public Author(String name) {
         this.name = name;
-        this.relatedAuthors = relatedAuthors;
     }
 
     public Author() {
-    }
-
-    public void addRelatedAuthor(Author author) {
-        if (relatedAuthors == null) {
-            relatedAuthors = new HashSet<>();
-        }
-        relatedAuthors.add(author);
     }
 }

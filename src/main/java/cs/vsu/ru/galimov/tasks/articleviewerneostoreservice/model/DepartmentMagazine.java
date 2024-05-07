@@ -1,12 +1,8 @@
 package cs.vsu.ru.galimov.tasks.articleviewerneostoreservice.model;
 
-import lombok.Getter;
-import lombok.Setter;
-import lombok.ToString;
+import lombok.Data;
 
-@Getter
-@Setter
-@ToString
+@Data
 public class DepartmentMagazine {
     private String name;
 
