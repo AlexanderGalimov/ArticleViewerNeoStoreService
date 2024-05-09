@@ -74,7 +74,6 @@ public class RelationshipCreator {
         } else if (parts1[0].equals(parts2[0]) && parts1[1].equals(parts2[1])) {
             return parts1[2].equals(parts2[2]);
         }
-
         return false;
     }
 
@@ -104,7 +103,7 @@ public class RelationshipCreator {
                         subjects = subjectService.findByAuthorsNamesContaining(resultAuthor.getName());
                     }
                     for (Subject relatedSubject : subjects) {
-                        if(relatedSubject != currentSubject){
+                        if(!(Objects.equals(relatedSubject.getTitle(), currentSubject.getTitle()))){
                             currentSubject.addRelatedSubject(relatedSubject);
                             subjectService.updateSubject(currentSubject.getId(), currentSubject);
                         }
