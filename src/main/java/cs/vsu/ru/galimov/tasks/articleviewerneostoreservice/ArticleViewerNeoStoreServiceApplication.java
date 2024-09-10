@@ -18,7 +18,7 @@ public class ArticleViewerNeoStoreServiceApplication {
         // MATCH (n) DETACH DELETE n;
         ArticleServiceImpl service = context.getBean(ArticleServiceImpl.class);
         List<Article> articles = service.findAll();
-        Article article = articles.get(1);
+        Article article = articles.get(2);
 
         ReferencesSeparator separator = context.getBean(ReferencesSeparator.class);
         List<String> list = separator.parseReferences(article.getFullText());

@@ -42,8 +42,8 @@ public class ReferencesSeparator {
         return null;
     }
 
-    public static List<String[]> parseBibliography(List<String> bibliography) {
-        List<String[]> parsedEntries = new ArrayList<>();
+    public static List<ParsedValuePair> parseBibliography(List<String> bibliography) {
+        List<ParsedValuePair> parsedEntries = new ArrayList<>();
 
         String regex = "([А-ЯЁA-Z][а-яёa-zA-Z-]+\\s+[А-ЯA-Z]\\.\\s?(?:[А-ЯA-Z]\\.)?)\\s(.+?)\\s/\\s";
         Pattern pattern = Pattern.compile(regex);
@@ -56,10 +56,9 @@ public class ReferencesSeparator {
 
                 title = title.split("\\s:\\s")[0];
                 title = title.replace("- ", "");
+                ParsedValuePair pair = new ParsedValuePair(authors, title);
 
-                parsedEntries.add(new String[]{authors, title});
-            } else {
-                parsedEntries.add(new String[]{"Не удалось извлечь автора", "Не удалось извлечь название"});
+                parsedEntries.add(pair);
             }
         }
 
