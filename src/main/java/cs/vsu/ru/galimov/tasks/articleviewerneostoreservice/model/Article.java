@@ -20,6 +20,8 @@ public class Article {
 
     private DepartmentMagazine departmentMagazine;
 
+    private Archive archive;
+
     private DateArchive dateArchive;
 
     private PDFParams pdfParams;
@@ -30,11 +32,12 @@ public class Article {
 
     private String uniqUIIDS3;
 
-    public Article(Magazine magazine, DepartmentMagazine departmentMagazine, DateArchive dateArchive, PDFParams pdfParams) {
+    public Article(Magazine magazine, DepartmentMagazine departmentMagazine, DateArchive dateArchive, PDFParams pdfParams, String fullText) {
         this.magazine = magazine;
         this.departmentMagazine = departmentMagazine;
         this.dateArchive = dateArchive;
         this.pdfParams = pdfParams;
+        this.fullText = fullText;
     }
 
     public Article() {
