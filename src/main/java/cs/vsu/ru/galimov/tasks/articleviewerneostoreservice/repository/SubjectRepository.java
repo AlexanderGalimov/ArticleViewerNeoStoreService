@@ -12,5 +12,5 @@ public interface SubjectRepository extends Neo4jRepository<Subject, Long> {
 
     List<Subject> findByDepartmentMagazineName(String departmentMagazineName);
 
-    List<Subject> findByTitleContaining(String title);
+    Subject findByTitleContaining(String title);
 }

@@ -60,7 +60,7 @@ public class SubjectServiceImpl implements SubjectService {
     }
 
     @Override
-    public List<Subject> findByTitleContaining(String title) {
+    public Subject findByTitleContaining(String title) {
         return subjectRepository.findByTitleContaining(title);
     }
 }

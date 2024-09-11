@@ -40,13 +40,8 @@ public class NeoParse {
     public void receive(String jsonArticle) {
         String articleId = convertJsonToArticle(jsonArticle);
         Article article = articleService.findById(articleId);
-        List<String> authorsNames = new ArrayList<>();
-        for (String authorsIds: article.getAuthorIds()) {
-             Author author = authorService.findById(authorsIds);
-             authorsNames.add(author.getName());
-        }
-        Subject subject = new Subject(article.getPdfParams().getTitle(), authorsNames, article.getDepartmentMagazine().getName());
-        subjectService.createSubject(subject);
+
+
     }
 
     private String convertJsonToArticle(String articleJsonId) {

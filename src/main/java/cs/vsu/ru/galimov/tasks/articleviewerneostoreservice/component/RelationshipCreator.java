@@ -1,5 +1,6 @@
 package cs.vsu.ru.galimov.tasks.articleviewerneostoreservice.component;
 
+import cs.vsu.ru.galimov.tasks.articleviewerneostoreservice.component.model.ParsedValuePair;
 import cs.vsu.ru.galimov.tasks.articleviewerneostoreservice.model.Article;
 import cs.vsu.ru.galimov.tasks.articleviewerneostoreservice.model.Author;
 import cs.vsu.ru.galimov.tasks.articleviewerneostoreservice.model.Subject;
@@ -28,6 +29,48 @@ public class RelationshipCreator {
         this.articleService = articleService;
         this.authorService = authorService;
         this.separator = separator;
+    }
+
+    public List<String> getAuthorsNames(Article article){
+        List<String> authorsNames = new ArrayList<>();
+        for (String authorsIds: article.getAuthorIds()) {
+            Author author = authorService.findById(authorsIds);
+            authorsNames.add(author.getName());
+        }
+        return authorsNames;
+    }
+
+    public void createRelationShip(Article article){
+        List<ParsedValuePair> references = separator.getReferences(article);
+
+        Subject subject;
+        if(subjectService.findByTitleContaining(article.getPdfParams().getTitle()) == null){
+            List<String> authorsNames = getAuthorsNames(article);
+            subject = subjectService.createSubject(new Subject(article.getPdfParams().getTitle(), authorsNames, article.getDepartmentMagazine().getName()));
+        }
+        else{
+            subject = subjectService.findByTitleContaining(article.getPdfParams().getTitle());
+        }
+        if(references != null){
+            for (ParsedValuePair pair: references) {
+                Subject referencedArticleSubject = subjectService.findByTitleContaining(pair.title());
+
+                if(referencedArticleSubject == null){
+                    Article referencedArticle = articleService.findByPdfParamsTitle(pair.title());
+                    if(referencedArticle != null){
+                        List<String> referencedArticleAuthorsNames = getAuthorsNames(article);
+                        Subject newReferencedArticleSubject = subjectService.createSubject(new Subject(article.getPdfParams().getTitle(), referencedArticleAuthorsNames, article.getDepartmentMagazine().getName()));
+                        subject.addRelatedSubject(newReferencedArticleSubject);
+                    }
+                }
+                else{
+                    subject.addRelatedSubject(referencedArticleSubject);
+                }
+            }
+        }
+        else{
+            System.out.println("references is null");
+        }
     }
 
     public String extractLastName(String fullName) {

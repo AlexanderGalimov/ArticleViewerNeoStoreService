@@ -1,6 +1,7 @@
 package cs.vsu.ru.galimov.tasks.articleviewerneostoreservice;
 
 import cs.vsu.ru.galimov.tasks.articleviewerneostoreservice.component.ReferencesSeparator;
+import cs.vsu.ru.galimov.tasks.articleviewerneostoreservice.component.RelationshipCreator;
 import cs.vsu.ru.galimov.tasks.articleviewerneostoreservice.model.Article;
 import cs.vsu.ru.galimov.tasks.articleviewerneostoreservice.service.impl.ArticleServiceImpl;
 import org.springframework.boot.SpringApplication;
@@ -18,10 +19,12 @@ public class ArticleViewerNeoStoreServiceApplication {
         // MATCH (n) DETACH DELETE n;
         ArticleServiceImpl service = context.getBean(ArticleServiceImpl.class);
         List<Article> articles = service.findAll();
-        Article article = articles.get(2);
+        //Article article = articles.get(0);
 
-        ReferencesSeparator separator = context.getBean(ReferencesSeparator.class);
-        List<String> list = separator.parseReferences(article.getFullText());
-        separator.parseBibliography(list);
+        RelationshipCreator creator = context.getBean(RelationshipCreator.class);
+        //creator.createRelationShip(article);
+        for (int i = 0; i < 50; i++) {
+            creator.createRelationShip(articles.get(i));
         }
+    }
 }

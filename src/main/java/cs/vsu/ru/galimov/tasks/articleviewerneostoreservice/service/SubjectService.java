@@ -21,5 +21,5 @@ public interface SubjectService {
 
     List<Subject> findByDepartmentMagazineName(String departmentMagazineName);
 
-    List<Subject> findByTitleContaining(String title);
+    Subject findByTitleContaining(String title);
 }
