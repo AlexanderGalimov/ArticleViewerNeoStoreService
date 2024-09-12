@@ -45,35 +45,36 @@ public class RelationshipCreator {
 
         Subject subject;
         List<String> authorsNames = getAuthorsNames(article);
-        // title containing
-        if(subjectService.findByTitleAndAuthorsNames(article.getPdfParams().getTitle(), authorsNames) == null){
-            subject = subjectService.createSubject(new Subject(article.getPdfParams().getTitle(), authorsNames, article.getDepartmentMagazine().getName()));
-        }
-        else{
-            subject = subjectService.findByTitleAndAuthorsNames(article.getPdfParams().getTitle(), authorsNames);
-        }
-        if(references != null){
-            for (ParsedValuePair pair: references) {
-                Subject referencedArticleSubject = subjectService.findByTitleContainingAndAuthorsNamesContaining(pair.title(), pair.author());
-
-                if(referencedArticleSubject == null){
-                    // todo search additionally authors names
+        try {
+            if (subjectService.findByTitleAndAuthorsNames(article.getPdfParams().getTitle(), authorsNames) == null) {
+                subject = subjectService.createSubject(new Subject(article.getPdfParams().getTitle(), authorsNames, article.getDepartmentMagazine().getName()));
+            } else {
+                subject = subjectService.findByTitleAndAuthorsNames(article.getPdfParams().getTitle(), authorsNames);
+            }
+            if (references != null) {
+                for (ParsedValuePair pair : references) {
+                    // todo authors
                     Article referencedArticle = articleService.findByPdfParamsTitle(pair.title());
                     if(referencedArticle != null){
                         List<String> referencedArticleAuthorsNames = getAuthorsNames(referencedArticle);
-                        Subject newReferencedArticleSubject = subjectService.createSubject(new Subject(referencedArticle.getPdfParams().getTitle(), referencedArticleAuthorsNames, referencedArticle.getDepartmentMagazine().getName()));
-                        subject.addRelatedSubject(newReferencedArticleSubject);
-                        subjectService.updateSubject(subject.getId(), subject);
+                        Subject referencedArticleSubject = subjectService.findByTitleAndAuthorsNames(referencedArticle.getPdfParams().getTitle(), referencedArticleAuthorsNames);
+                        if (referencedArticleSubject == null) {
+                            Subject newReferencedArticleSubject = subjectService.createSubject(new Subject(referencedArticle.getPdfParams().getTitle(), referencedArticleAuthorsNames, referencedArticle.getDepartmentMagazine().getName()));
+                            subject.addRelatedSubject(newReferencedArticleSubject);
+                            subjectService.updateSubject(subject.getId(), subject);
+                        } else {
+                            subject.addRelatedSubject(referencedArticleSubject);
+                            subjectService.updateSubject(subject.getId(), subject);
+                        }
                     }
                 }
-                else{
-                    subject.addRelatedSubject(referencedArticleSubject);
-                    subjectService.updateSubject(subject.getId(), subject);
-                }
+            } else {
+                System.out.println("references is null");
             }
-        }
-        else{
-            System.out.println("references is null");
+        } catch (Exception e){
+            System.out.println("Got exception for:" + article.getPdfParams().getTitle());
+            System.out.println(e.getMessage());
+            System.exit(-1);
         }
     }
 
