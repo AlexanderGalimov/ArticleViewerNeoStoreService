@@ -10,6 +10,8 @@ import java.util.List;
 public interface ArticleRepository extends MongoRepository<Article, String> {
     Article findByPdfParamsTitle(String title);
 
+    Article findByPdfParamsTitleContainingAndAuthorIdsContaining(String title, String id);
+
     Article findByUniqUIIDS3(String uniqUIIDS3);
 
     List<Article> findByAuthorIdsContaining(String authorId);

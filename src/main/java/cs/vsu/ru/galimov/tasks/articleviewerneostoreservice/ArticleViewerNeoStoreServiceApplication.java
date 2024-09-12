@@ -23,7 +23,7 @@ public class ArticleViewerNeoStoreServiceApplication {
 
         RelationshipCreator creator = context.getBean(RelationshipCreator.class);
         //creator.createRelationShip(article);
-        for (int i = 0; i < 50; i++) {
+        for (int i = 0; i < 300; i++) {
             creator.createRelationShip(articles.get(i));
         }
     }

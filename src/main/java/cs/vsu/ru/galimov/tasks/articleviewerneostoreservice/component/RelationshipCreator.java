@@ -44,27 +44,31 @@ public class RelationshipCreator {
         List<ParsedValuePair> references = separator.getReferences(article);
 
         Subject subject;
-        if(subjectService.findByTitleContaining(article.getPdfParams().getTitle()) == null){
-            List<String> authorsNames = getAuthorsNames(article);
+        List<String> authorsNames = getAuthorsNames(article);
+        // title containing
+        if(subjectService.findByTitleAndAuthorsNames(article.getPdfParams().getTitle(), authorsNames) == null){
             subject = subjectService.createSubject(new Subject(article.getPdfParams().getTitle(), authorsNames, article.getDepartmentMagazine().getName()));
         }
         else{
-            subject = subjectService.findByTitleContaining(article.getPdfParams().getTitle());
+            subject = subjectService.findByTitleAndAuthorsNames(article.getPdfParams().getTitle(), authorsNames);
         }
         if(references != null){
             for (ParsedValuePair pair: references) {
-                Subject referencedArticleSubject = subjectService.findByTitleContaining(pair.title());
+                Subject referencedArticleSubject = subjectService.findByTitleContainingAndAuthorsNamesContaining(pair.title(), pair.author());
 
                 if(referencedArticleSubject == null){
+                    // todo search additionally authors names
                     Article referencedArticle = articleService.findByPdfParamsTitle(pair.title());
                     if(referencedArticle != null){
-                        List<String> referencedArticleAuthorsNames = getAuthorsNames(article);
-                        Subject newReferencedArticleSubject = subjectService.createSubject(new Subject(article.getPdfParams().getTitle(), referencedArticleAuthorsNames, article.getDepartmentMagazine().getName()));
+                        List<String> referencedArticleAuthorsNames = getAuthorsNames(referencedArticle);
+                        Subject newReferencedArticleSubject = subjectService.createSubject(new Subject(referencedArticle.getPdfParams().getTitle(), referencedArticleAuthorsNames, referencedArticle.getDepartmentMagazine().getName()));
                         subject.addRelatedSubject(newReferencedArticleSubject);
+                        subjectService.updateSubject(subject.getId(), subject);
                     }
                 }
                 else{
                     subject.addRelatedSubject(referencedArticleSubject);
+                    subjectService.updateSubject(subject.getId(), subject);
                 }
             }
         }
@@ -119,40 +123,4 @@ public class RelationshipCreator {
         }
         return false;
     }
-
-//    public void createRelationship(String departmentMagazineName) {
-//        List<Subject> allSubjects = subjectService.findByDepartmentMagazineName(departmentMagazineName);
-//        for (Subject currentSubject : allSubjects) {
-//
-//            Article currentArticle = articleService.findByPdfParamsTitle(currentSubject.getTitle());
-//
-//            String fullText = currentArticle.getFullText();
-//            if (!Objects.equals(fullText, "")) {
-//                Set<String> relatedAuthors = separator.getRelatedAuthors(fullText);
-//                for (String relatedAuthorName : relatedAuthors) {
-//                    String lastName = extractLastName(relatedAuthorName);
-//                    List<Author> authors = authorService.findByNameContains(lastName);
-//                    List<Subject> subjects = new ArrayList<>();
-//                    Author resultAuthor = null;
-//                    for (Author author : authors) {
-//                        String authorName = author.getName();
-//                        String shortName = shortFullName(authorName);
-//                        if (areEquivalentNames(shortName, relatedAuthorName)) {
-//                            resultAuthor = author;
-//                            break;
-//                        }
-//                    }
-//                    if (resultAuthor != null) {
-//                        subjects = subjectService.findByAuthorsNamesContaining(resultAuthor.getName());
-//                    }
-//                    for (Subject relatedSubject : subjects) {
-//                        if(!(Objects.equals(relatedSubject.getTitle(), currentSubject.getTitle()))){
-//                            currentSubject.addRelatedSubject(relatedSubject);
-//                            subjectService.updateSubject(currentSubject.getId(), currentSubject);
-//                        }
-//                    }
-//                }
-//            }
-//        }
-//    }
 }
