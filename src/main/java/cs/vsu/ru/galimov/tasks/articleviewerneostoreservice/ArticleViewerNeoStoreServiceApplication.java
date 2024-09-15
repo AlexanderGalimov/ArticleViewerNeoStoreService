@@ -15,16 +15,16 @@ public class ArticleViewerNeoStoreServiceApplication {
 
     public static void main(String[] args) {
         ApplicationContext context = SpringApplication.run(ArticleViewerNeoStoreServiceApplication.class, args);
-
-        // MATCH (n) DETACH DELETE n;
-        ArticleServiceImpl service = context.getBean(ArticleServiceImpl.class);
-        List<Article> articles = service.findAll();
-        //Article article = articles.get(0);
-
-        RelationshipCreator creator = context.getBean(RelationshipCreator.class);
-        //creator.createRelationShip(article);
-        for (int i = 0; i < 300; i++) {
-            creator.createRelationShip(articles.get(i));
-        }
+//
+//        // MATCH (n) DETACH DELETE n;
+//        ArticleServiceImpl service = context.getBean(ArticleServiceImpl.class);
+//        List<Article> articles = service.findAll();
+//        //Article article = articles.get(0);
+//
+//        RelationshipCreator creator = context.getBean(RelationshipCreator.class);
+//        //creator.createRelationShip(article);
+//        for (int i = 0; i < 300; i++) {
+//            creator.createRelationShip(articles.get(i));
+//        }
     }
 }

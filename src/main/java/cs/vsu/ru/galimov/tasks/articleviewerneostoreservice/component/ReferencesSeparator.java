@@ -66,10 +66,11 @@ public class ReferencesSeparator {
     public List<ParsedValuePair> getReferences(Article article) {
         try {
             String cutReferences = cutFullText(article.getFullText());
+            if (cutReferences != null) {
+                List<String> stringReferences = parseStringReferences(cutReferences);
 
-            List<String> stringReferences = parseStringReferences(cutReferences);
-
-            return parseBibliography(stringReferences);
+                return parseBibliography(stringReferences);
+            }
         } catch (Exception e) {
             System.err.println(e.getMessage());
         }
