@@ -70,6 +70,11 @@ public class SubjectServiceImpl implements SubjectService {
     }
 
     @Override
+    public Subject findByTitleAndAuthorsNamesContaining(String title, String author) {
+        return subjectRepository.findByTitleAndAuthorsNamesContaining(title, author);
+    }
+
+    @Override
     public Subject findByTitleAndAuthorsNames(String title, List<String> authors) {
         return subjectRepository.findByTitleAndAuthorsNames(title, authors);
     }

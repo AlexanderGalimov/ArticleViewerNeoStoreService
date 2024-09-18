@@ -1,6 +1,7 @@
 package cs.vsu.ru.galimov.tasks.articleviewerneostoreservice.service;
 
 import cs.vsu.ru.galimov.tasks.articleviewerneostoreservice.model.Subject;
+import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
@@ -25,5 +26,7 @@ public interface SubjectService {
 
     Subject findByTitleContainingAndAuthorsNames(String title, List<String> authors);
 
-    Subject findByTitleAndAuthorsNames(String title, List<String> authors);
+    Subject findByTitleAndAuthorsNamesContaining(String title, String author);
+
+    Subject findByTitleAndAuthorsNames(@Param("title") String title, @Param("authorsNames") List<String> authorsNames);
 }

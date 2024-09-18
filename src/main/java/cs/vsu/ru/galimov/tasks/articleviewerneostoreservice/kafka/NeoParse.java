@@ -4,8 +4,6 @@ import com.google.gson.Gson;
 import cs.vsu.ru.galimov.tasks.articleviewerneostoreservice.component.RelationshipCreator;
 import cs.vsu.ru.galimov.tasks.articleviewerneostoreservice.model.Article;
 import cs.vsu.ru.galimov.tasks.articleviewerneostoreservice.service.ArticleService;
-import cs.vsu.ru.galimov.tasks.articleviewerneostoreservice.service.impl.AuthorServiceImpl;
-import cs.vsu.ru.galimov.tasks.articleviewerneostoreservice.service.impl.SubjectServiceImpl;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.kafka.annotation.KafkaListener;
@@ -31,13 +29,17 @@ public class NeoParse {
 
     @KafkaListener(topics = "${kafka.topic.name.for-graph-topic}", containerFactory = "kafkaListenerContainerFactory", concurrency = "${kafka.topic.partitions.for-graph-topic}")
     public void receive(String jsonArticle) {
-        String articleId = convertJsonToArticle(jsonArticle);
-        Article article = articleService.findById(articleId);
         try {
-            creator.createRelationShip(article);
+            String uuid = convertJsonToArticle(jsonArticle);
+            Article article = articleService.findByUniqUIIDS3(uuid);
+            if(article != null){
+                creator.createRelationShip(article);
+            }
+            else{
+                System.out.println("null");
+            }
         } catch (Exception e) {
             System.err.println(e.getMessage());
-            System.out.println("Error in parse:" + article.getPdfParams().getTitle());
         }
     }
 

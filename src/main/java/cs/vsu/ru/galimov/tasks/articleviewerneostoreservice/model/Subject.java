@@ -1,7 +1,5 @@
 package cs.vsu.ru.galimov.tasks.articleviewerneostoreservice.model;
 
-
-import lombok.Data;
 import lombok.Getter;
 import lombok.Setter;
 import org.springframework.data.neo4j.core.schema.GeneratedValue;
@@ -23,6 +21,8 @@ public class Subject {
 
     private String title;
 
+    private SubjectStatus status;
+
     private List<String> authorsNames;
 
     private String departmentMagazineName;
@@ -30,8 +30,9 @@ public class Subject {
     @Relationship(type = "RELATED_TO")
     private Set<Subject> relatedSubjects;
 
-    public Subject(String title, List<String> authorsNames, String departmentMagazineName) {
+    public Subject(String title, SubjectStatus status, List<String> authorsNames, String departmentMagazineName) {
         this.title = title;
+        this.status = status;
         this.authorsNames = authorsNames;
         this.departmentMagazineName = departmentMagazineName;
     }
