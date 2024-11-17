@@ -5,6 +5,8 @@ import cs.vsu.ru.galimov.tasks.articleviewerneostoreservice.component.Relationsh
 import cs.vsu.ru.galimov.tasks.articleviewerneostoreservice.model.Article;
 import cs.vsu.ru.galimov.tasks.articleviewerneostoreservice.service.ArticleService;
 import lombok.extern.slf4j.Slf4j;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.kafka.annotation.KafkaListener;
 import org.springframework.stereotype.Component;
@@ -20,6 +22,8 @@ public class NeoParse {
 
     private final Gson gson;
 
+    private final Logger logger = LoggerFactory.getLogger(NeoParse.class);
+
     @Autowired
     public NeoParse(ArticleService articleService, RelationshipCreator creator, Gson gson) {
         this.articleService = articleService;
@@ -32,11 +36,11 @@ public class NeoParse {
         try {
             String uuid = convertJsonToArticle(jsonArticle);
             Article article = articleService.findByUniqUIIDS3(uuid);
-            if(article != null){
+            if (article != null) {
                 creator.createRelationShip(article);
-            }
-            else{
-                System.out.println("null");
+                logger.info("Relationship created for article with uuid: " + uuid);
+            } else {
+                logger.info("Article with uuid: " + uuid + "is null");
             }
         } catch (Exception e) {
             System.err.println(e.getMessage());

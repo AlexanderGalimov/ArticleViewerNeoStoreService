@@ -2,6 +2,8 @@ package cs.vsu.ru.galimov.tasks.articleviewerneostoreservice.component;
 
 import cs.vsu.ru.galimov.tasks.articleviewerneostoreservice.component.model.ParsedValuePair;
 import cs.vsu.ru.galimov.tasks.articleviewerneostoreservice.model.Article;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
 
 import java.util.ArrayList;
@@ -11,6 +13,8 @@ import java.util.regex.Pattern;
 
 @Component
 public class ReferencesSeparator {
+
+    private final Logger logger = LoggerFactory.getLogger(ReferencesSeparator.class);
 
     public String removeNewLines(String input) {
         return input.replaceAll("[\n\r]", " ").replace("  ", " ");
@@ -72,7 +76,7 @@ public class ReferencesSeparator {
                 return parseBibliography(stringReferences);
             }
         } catch (Exception e) {
-            System.err.println(e.getMessage());
+            logger.error("Error in get references: " + e.getMessage());
         }
         return null;
     }

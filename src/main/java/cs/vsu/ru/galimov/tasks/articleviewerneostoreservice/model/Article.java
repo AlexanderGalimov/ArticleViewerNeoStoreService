@@ -30,6 +30,10 @@ public class Article {
 
     private String fullText;
 
+    private List<String> keywords;
+
+    private String annotation;
+
     private String uniqUIIDS3;
 
     public Article(Magazine magazine, DepartmentMagazine departmentMagazine, DateArchive dateArchive, PDFParams pdfParams, String fullText) {

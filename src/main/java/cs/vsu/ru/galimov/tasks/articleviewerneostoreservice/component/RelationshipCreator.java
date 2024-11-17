@@ -8,6 +8,8 @@ import cs.vsu.ru.galimov.tasks.articleviewerneostoreservice.model.SubjectStatus;
 import cs.vsu.ru.galimov.tasks.articleviewerneostoreservice.service.impl.ArticleServiceImpl;
 import cs.vsu.ru.galimov.tasks.articleviewerneostoreservice.service.impl.AuthorServiceImpl;
 import cs.vsu.ru.galimov.tasks.articleviewerneostoreservice.service.impl.SubjectServiceImpl;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -23,6 +25,8 @@ public class RelationshipCreator {
     private final AuthorServiceImpl authorService;
 
     private final ReferencesSeparator separator;
+
+    private final Logger logger = LoggerFactory.getLogger(RelationshipCreator.class);
 
     @Autowired
     public RelationshipCreator(SubjectServiceImpl subjectService, ArticleServiceImpl articleService, AuthorServiceImpl authorService, ReferencesSeparator separator) {
@@ -72,13 +76,12 @@ public class RelationshipCreator {
                         }
                     } else {
                         Subject oldUnchekedSubject = subjectService.findByTitleAndAuthorsNamesContaining(pair.title(), pair.author());
-                        if(oldUnchekedSubject == null){
+                        if (oldUnchekedSubject == null) {
                             List<String> authors = new ArrayList<>();
                             authors.add(pair.author());
                             Subject uncheckedSubject = subjectService.createSubject(new Subject(pair.title(), SubjectStatus.CREATED, authors, null));
                             subject.addRelatedSubject(uncheckedSubject);
-                        }
-                        else{
+                        } else {
                             subject.addRelatedSubject(oldUnchekedSubject);
                         }
                     }
@@ -86,11 +89,11 @@ public class RelationshipCreator {
                     subjectService.updateSubject(subject.getId(), subject);
                 }
             } else {
-                System.out.println("references is null");
+                logger.info("References is null for article: " + article.getUniqUIIDS3());
             }
         } catch (Exception e) {
-            System.out.println("Got exception for:" + article.getPdfParams().getTitle());
-            System.out.println(e.getMessage());
+            logger.error("Got exception for:" + article.getPdfParams().getTitle());
+            logger.error(e.getMessage());
             System.exit(-1);
         }
     }
