@@ -1,7 +1,7 @@
 package cs.vsu.ru.galimov.tasks.articleviewerneostoreservice.kafka;
 
 import com.google.gson.Gson;
-import cs.vsu.ru.galimov.tasks.articleviewerneostoreservice.component.RelationshipCreator;
+import cs.vsu.ru.galimov.tasks.articleviewerneostoreservice.component.relationship.RelationshipCreator;
 import cs.vsu.ru.galimov.tasks.articleviewerneostoreservice.model.Article;
 import cs.vsu.ru.galimov.tasks.articleviewerneostoreservice.service.ArticleService;
 import lombok.extern.slf4j.Slf4j;

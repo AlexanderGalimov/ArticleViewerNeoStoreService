@@ -1,6 +1,6 @@
-package cs.vsu.ru.galimov.tasks.articleviewerneostoreservice.component;
+package cs.vsu.ru.galimov.tasks.articleviewerneostoreservice.component.relationship;
 
-import cs.vsu.ru.galimov.tasks.articleviewerneostoreservice.component.model.ParsedValuePair;
+import cs.vsu.ru.galimov.tasks.articleviewerneostoreservice.component.relationship.model.ParsedValuePair;
 import cs.vsu.ru.galimov.tasks.articleviewerneostoreservice.model.Article;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

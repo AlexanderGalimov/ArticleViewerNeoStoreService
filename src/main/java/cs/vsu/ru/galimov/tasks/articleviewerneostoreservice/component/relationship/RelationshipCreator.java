@@ -1,6 +1,7 @@
-package cs.vsu.ru.galimov.tasks.articleviewerneostoreservice.component;
+package cs.vsu.ru.galimov.tasks.articleviewerneostoreservice.component.relationship;
 
-import cs.vsu.ru.galimov.tasks.articleviewerneostoreservice.component.model.ParsedValuePair;
+import cs.vsu.ru.galimov.tasks.articleviewerneostoreservice.component.activity.ActivityMonitor;
+import cs.vsu.ru.galimov.tasks.articleviewerneostoreservice.component.relationship.model.ParsedValuePair;
 import cs.vsu.ru.galimov.tasks.articleviewerneostoreservice.model.Article;
 import cs.vsu.ru.galimov.tasks.articleviewerneostoreservice.model.Author;
 import cs.vsu.ru.galimov.tasks.articleviewerneostoreservice.model.Subject;
@@ -28,12 +29,15 @@ public class RelationshipCreator {
 
     private final Logger logger = LoggerFactory.getLogger(RelationshipCreator.class);
 
+    private final ActivityMonitor monitor;
+
     @Autowired
-    public RelationshipCreator(SubjectServiceImpl subjectService, ArticleServiceImpl articleService, AuthorServiceImpl authorService, ReferencesSeparator separator) {
+    public RelationshipCreator(SubjectServiceImpl subjectService, ArticleServiceImpl articleService, AuthorServiceImpl authorService, ReferencesSeparator separator, ActivityMonitor monitor) {
         this.subjectService = subjectService;
         this.articleService = articleService;
         this.authorService = authorService;
         this.separator = separator;
+        this.monitor = monitor;
     }
 
     public List<String> getAuthorsNames(Article article) {
@@ -47,6 +51,8 @@ public class RelationshipCreator {
 
     public void createRelationShip(Article article) {
         List<ParsedValuePair> references = separator.getReferences(article);
+
+        monitor.updateLastActivity();
 
         Subject subject;
         List<String> authorsNames = getAuthorsNames(article);
@@ -63,7 +69,6 @@ public class RelationshipCreator {
             }
             if (references != null) {
                 for (ParsedValuePair pair : references) {
-                    // todo authors
                     Article referencedArticle = articleService.findByPdfParamsTitle(pair.title());
                     if (referencedArticle != null) {
                         List<String> referencedArticleAuthorsNames = getAuthorsNames(referencedArticle);
