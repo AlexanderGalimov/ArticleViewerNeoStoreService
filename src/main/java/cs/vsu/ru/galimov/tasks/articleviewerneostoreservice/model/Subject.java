@@ -1,6 +1,7 @@
 package cs.vsu.ru.galimov.tasks.articleviewerneostoreservice.model;
 
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.springframework.data.neo4j.core.schema.GeneratedValue;
 import org.springframework.data.neo4j.core.schema.Id;
@@ -13,8 +14,10 @@ import java.util.Set;
 
 @Getter
 @Setter
+@NoArgsConstructor
 @Node("Subject")
 public class Subject {
+
     @Id
     @GeneratedValue
     private Long id;
@@ -35,9 +38,6 @@ public class Subject {
         this.status = status;
         this.authorsNames = authorsNames;
         this.departmentMagazineName = departmentMagazineName;
-    }
-
-    public Subject() {
     }
 
     public void addRelatedSubject(Subject subject) {

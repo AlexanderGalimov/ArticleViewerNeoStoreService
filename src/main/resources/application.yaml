@@ -1,0 +1,47 @@
+spring:
+  kafka:
+    template:
+      default-topic: input
+    bootstrap-servers: 127.0.0.1:9092
+  neo4j:
+    uri: bolt://localhost:7687
+    authentication:
+      username: neo4j
+      password: 185206
+  lifecycle:
+    timeout-per-shutdown-phase: 20s
+
+server:
+  port: 9500
+  shutdown: graceful
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health,prometheus
+  prometheus:
+    metrics:
+      export:
+        enabled: true
+  metrics:
+    distribution:
+      percentiles-histogram:
+        http.server.requests: true
+
+kafka:
+  consumer:
+    auto-commit: true
+    session-timeout: 6000
+    auto-commit-interval: 100
+    offset-reset: latest
+    concurrency: 3
+    group-id: summaryGroup
+
+  graph-topic:
+    name: graphTopic
+    partitions: 3
+
+logging:
+  level:
+    org.springframework.data.mongodb.core: DEBUG

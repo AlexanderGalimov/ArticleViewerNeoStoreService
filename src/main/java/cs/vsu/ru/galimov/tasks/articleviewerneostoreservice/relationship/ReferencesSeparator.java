@@ -1,9 +1,8 @@
-package cs.vsu.ru.galimov.tasks.articleviewerneostoreservice.component.relationship;
+package cs.vsu.ru.galimov.tasks.articleviewerneostoreservice.relationship;
 
-import cs.vsu.ru.galimov.tasks.articleviewerneostoreservice.component.relationship.model.ParsedValuePair;
 import cs.vsu.ru.galimov.tasks.articleviewerneostoreservice.model.Article;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import cs.vsu.ru.galimov.tasks.articleviewerneostoreservice.relationship.model.ParsedValuePair;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 
 import java.util.ArrayList;
@@ -11,10 +10,9 @@ import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+@Slf4j
 @Component
 public class ReferencesSeparator {
-
-    private final Logger logger = LoggerFactory.getLogger(ReferencesSeparator.class);
 
     public String removeNewLines(String input) {
         return input.replaceAll("[\n\r]", " ").replace("  ", " ");
@@ -76,7 +74,7 @@ public class ReferencesSeparator {
                 return parseBibliography(stringReferences);
             }
         } catch (Exception e) {
-            logger.error("Error in get references: " + e.getMessage());
+            log.error("Error in get references: " + e.getMessage());
         }
         return null;
     }

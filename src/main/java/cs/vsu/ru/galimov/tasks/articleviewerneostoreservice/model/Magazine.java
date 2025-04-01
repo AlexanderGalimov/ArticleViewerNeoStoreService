@@ -1,17 +1,15 @@
 package cs.vsu.ru.galimov.tasks.articleviewerneostoreservice.model;
 
-import lombok.Data;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.Setter;
 
-@Data
+@Getter
+@Setter
+@AllArgsConstructor
 public class Magazine {
+
     private String name;
+
     private String link;
-
-    public Magazine(String name, String link) {
-        this.name = name;
-        this.link = link;
-    }
-
-    public Magazine() {
-    }
 }

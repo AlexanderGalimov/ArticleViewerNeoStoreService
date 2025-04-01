@@ -1,45 +1,34 @@
 package cs.vsu.ru.galimov.tasks.articleviewerneostoreservice.kafka;
 
+import cs.vsu.ru.galimov.tasks.articleviewerneostoreservice.properties.KafkaBaseProperties;
+import cs.vsu.ru.galimov.tasks.articleviewerneostoreservice.properties.KafkaConsumerProperties;
+import lombok.RequiredArgsConstructor;
 import org.apache.kafka.clients.consumer.ConsumerConfig;
 import org.apache.kafka.common.serialization.StringDeserializer;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.kafka.annotation.EnableKafka;
 import org.springframework.kafka.config.ConcurrentKafkaListenerContainerFactory;
 import org.springframework.kafka.config.KafkaListenerContainerFactory;
 import org.springframework.kafka.core.ConsumerFactory;
 import org.springframework.kafka.core.DefaultKafkaConsumerFactory;
 import org.springframework.kafka.listener.ConcurrentMessageListenerContainer;
-import org.springframework.kafka.support.serializer.JsonDeserializer;
 
 import java.util.HashMap;
 import java.util.Map;
 
+@RequiredArgsConstructor
 @Configuration
-@EnableKafka
 public class GraphTopicConsumerConfig {
 
-    @Value("${kafka.consumer.servers}")
-    private String servers;
-    @Value("${kafka.consumer.enable.auto.commit}")
-    private boolean enableAutoCommit;
-    @Value("${kafka.consumer.session.timeout}")
-    private String sessionTimeout;
-    @Value("${kafka.consumer.auto.commit.interval}")
-    private String autoCommitInterval;
-    @Value("${kafka.consumer.auto.offset.reset}")
-    private String autoOffsetReset;
-    @Value("${kafka.consumer.concurrency}")
-    private int concurrency;
-    @Value("${spring.kafka.consumer.group-id}")
-    private String groupId;
+    private final KafkaBaseProperties kafkaBaseProperties;
+
+    private final KafkaConsumerProperties kafkaConsumerProperties;
 
     @Bean
     public KafkaListenerContainerFactory<ConcurrentMessageListenerContainer<String, String>> kafkaListenerContainerFactory() {
         ConcurrentKafkaListenerContainerFactory<String, String> factory = new ConcurrentKafkaListenerContainerFactory<>();
         factory.setConsumerFactory(consumerFactory());
-        factory.setConcurrency(concurrency);
+        factory.setConcurrency(kafkaConsumerProperties.getConcurrency());
         factory.getContainerProperties().setPollTimeout(1500);
         return factory;
     }
@@ -48,20 +37,20 @@ public class GraphTopicConsumerConfig {
         return new DefaultKafkaConsumerFactory<>(
                 consumerConfigs(),
                 new StringDeserializer(),
-                new JsonDeserializer<>()
+                new StringDeserializer()
         );
     }
 
     private Map<String, Object> consumerConfigs() {
         Map<String, Object> propsMap = new HashMap<>();
-        propsMap.put(ConsumerConfig.BOOTSTRAP_SERVERS_CONFIG, "localhost:9092");
-        propsMap.put(ConsumerConfig.ENABLE_AUTO_COMMIT_CONFIG, enableAutoCommit);
-        propsMap.put(ConsumerConfig.AUTO_COMMIT_INTERVAL_MS_CONFIG, autoCommitInterval);
-        propsMap.put(ConsumerConfig.SESSION_TIMEOUT_MS_CONFIG, sessionTimeout);
+        propsMap.put(ConsumerConfig.BOOTSTRAP_SERVERS_CONFIG, kafkaBaseProperties.getBootstrapServers());
+        propsMap.put(ConsumerConfig.ENABLE_AUTO_COMMIT_CONFIG, kafkaConsumerProperties.getAutoCommit());
+        propsMap.put(ConsumerConfig.AUTO_COMMIT_INTERVAL_MS_CONFIG, kafkaConsumerProperties.getAutoCommitInterval());
+        propsMap.put(ConsumerConfig.SESSION_TIMEOUT_MS_CONFIG, kafkaConsumerProperties.getSessionTimeout());
         propsMap.put(ConsumerConfig.KEY_DESERIALIZER_CLASS_CONFIG, StringDeserializer.class);
         propsMap.put(ConsumerConfig.VALUE_DESERIALIZER_CLASS_CONFIG, StringDeserializer.class);
-        propsMap.put(ConsumerConfig.AUTO_OFFSET_RESET_CONFIG, autoOffsetReset);
-        propsMap.put(ConsumerConfig.GROUP_ID_CONFIG, groupId);
+        propsMap.put(ConsumerConfig.AUTO_OFFSET_RESET_CONFIG, kafkaConsumerProperties.getOffsetReset());
+        propsMap.put(ConsumerConfig.GROUP_ID_CONFIG, kafkaConsumerProperties.getGroupId());
         return propsMap;
     }
 }

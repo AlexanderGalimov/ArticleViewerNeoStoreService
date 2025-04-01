@@ -10,14 +10,6 @@ import java.util.List;
 
 @Repository
 public interface SubjectRepository extends Neo4jRepository<Subject, Long> {
-    List<Subject> findByAuthorsNamesContaining(String authorName);
-
-    List<Subject> findByDepartmentMagazineName(String departmentMagazineName);
-
-    Subject findByTitleContainingAndAuthorsNamesContaining(String title, String author);
-
-    Subject findByTitleContainingAndAuthorsNames(String title, List<String> authors);
-
     Subject findByTitleAndAuthorsNamesContaining(String title, String author);
 
     @Query("MATCH (s:Subject) " +
