@@ -17,4 +17,11 @@ public interface SubjectRepository extends Neo4jRepository<Subject, Long> {
             "AND ANY(author IN s.authorsNames WHERE author IN $authorsNames) " +
             "RETURN s")
     Subject findByTitleAndAuthorsNames(@Param("title") String title, @Param("authorsNames") List<String> authorsNames);
+
+    @Query("""
+    MATCH (s:Subject)
+    WHERE s.title = $title AND ANY(author IN $authors WHERE author IN s.authorsNames)
+    RETURN s
+    """)
+    Subject findByTitleAndAnyAuthorInAuthorsNames(String title, List<String> authors);
 }

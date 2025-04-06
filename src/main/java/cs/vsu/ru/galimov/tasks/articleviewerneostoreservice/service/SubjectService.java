@@ -13,4 +13,6 @@ public interface SubjectService {
     Subject findByTitleAndAuthorsNamesContaining(String title, String author);
 
     Subject findByTitleAndAuthorsNames(@Param("title") String title, @Param("authorsNames") List<String> authorsNames);
+
+    Subject findByTitleAndAnyAuthorInAuthorsNames(String title, List<String> authors);
 }

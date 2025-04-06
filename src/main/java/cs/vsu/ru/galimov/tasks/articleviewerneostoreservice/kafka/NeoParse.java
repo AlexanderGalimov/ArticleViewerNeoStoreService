@@ -30,7 +30,7 @@ public class NeoParse {
                 log.info("Article with uuid: {} is null", uniqueName);
             }
         } catch (Exception e) {
-            System.err.println(e.getMessage());
+            log.error("Cannot create relationship: {}", e.getMessage());
         }
     }
 }

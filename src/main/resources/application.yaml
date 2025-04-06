@@ -34,7 +34,7 @@ kafka:
     auto-commit: true
     session-timeout: 6000
     auto-commit-interval: 100
-    offset-reset: latest
+    offset-reset: earliest
     concurrency: 3
     group-id: summaryGroup
 

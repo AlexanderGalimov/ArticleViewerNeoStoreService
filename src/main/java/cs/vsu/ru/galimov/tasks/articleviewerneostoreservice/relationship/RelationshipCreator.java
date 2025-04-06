@@ -43,10 +43,10 @@ public class RelationshipCreator {
         Subject subject;
         List<String> authorsNames = getAuthorsNames(article);
         try {
-            if (subjectService.findByTitleAndAuthorsNames(article.getPdfParams().getTitle(), authorsNames) == null) {
+            subject = subjectService.findByTitleAndAnyAuthorInAuthorsNames(article.getPdfParams().getTitle(), authorsNames);
+            if (subject == null) {
                 subject = subjectService.createSubject(new Subject(article.getPdfParams().getTitle(), SubjectStatus.FOUND, authorsNames, article.getDepartmentMagazine().getName()));
             } else {
-                subject = subjectService.findByTitleAndAuthorsNames(article.getPdfParams().getTitle(), authorsNames);
                 if (subject.getStatus() == SubjectStatus.CREATED) {
                     subject.setStatus(SubjectStatus.FOUND);
                     subject.setDepartmentMagazineName(article.getDepartmentMagazine().getName());
@@ -58,7 +58,8 @@ public class RelationshipCreator {
                     Article referencedArticle = articleService.findByPdfParamsTitle(pair.title());
                     if (referencedArticle != null) {
                         List<String> referencedArticleAuthorsNames = getAuthorsNames(referencedArticle);
-                        Subject referencedArticleSubject = subjectService.findByTitleAndAuthorsNames(referencedArticle.getPdfParams().getTitle(), referencedArticleAuthorsNames);
+                        //
+                        Subject referencedArticleSubject = subjectService.findByTitleAndAnyAuthorInAuthorsNames(referencedArticle.getPdfParams().getTitle(), referencedArticleAuthorsNames);
                         if (referencedArticleSubject == null) {
                             Subject newReferencedArticleSubject = subjectService.createSubject(new Subject(referencedArticle.getPdfParams().getTitle(), SubjectStatus.FOUND, referencedArticleAuthorsNames, referencedArticle.getDepartmentMagazine().getName()));
                             subject.addRelatedSubject(newReferencedArticleSubject);
