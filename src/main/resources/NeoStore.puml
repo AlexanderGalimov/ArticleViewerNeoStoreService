@@ -1,0 +1,52 @@
+@startuml
+participant "NeoStoreService" as NeoStore
+participant "Kafka" as Kafka
+participant "MongoDB" as MongoDB
+participant "Neo4j" as Neo4j
+
+Kafka -> NeoStore: Получение статьи
+activate Kafka
+activate NeoStore
+
+NeoStore -> MongoDB: Поиск статьи в базе
+activate MongoDB
+
+alt Статья найдена
+    MongoDB --> NeoStore: Статья получена
+
+    NeoStore -> Neo4j: Проверка наличия связей
+    activate Neo4j
+    Neo4j --> NeoStore: Связи найдены
+    deactivate Neo4j
+
+    NeoStore -> Kafka: Отправка события обработки
+    Kafka --> NeoStore: ACK
+
+    else Ошибка поиска статьи
+        MongoDB --> NeoStore: Статья не найдена
+        deactivate Neo4j
+        deactivate MongoDB
+        NeoStore -> NeoStore: Логирование ошибки
+        NeoStore -> Kafka: Send to DLQ
+end
+
+alt Связи отсутствуют
+    NeoStore -> Neo4j: Создание связей
+    activate Neo4j
+    Neo4j --> NeoStore: Связи успешно созданы
+
+    NeoStore -> Kafka: Отправка события обработки
+    Kafka --> NeoStore: ACK
+    deactivate MongoDB
+
+    else Ошибка создания связей
+        Neo4j --> NeoStore: Ошибка создания связей
+        deactivate Neo4j
+        deactivate MongoDB
+        NeoStore -> NeoStore: Логирование ошибки
+        NeoStore -> Kafka: Send to DLQ
+        deactivate NeoStore
+end
+
+deactivate NeoStore
+@enduml
